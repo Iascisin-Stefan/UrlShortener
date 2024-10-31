@@ -1,4 +1,6 @@
-from flask import Flask, render_template, url_for, redirect 
+import random
+import string
+from flask import Flask, render_template, url_for, redirect, request 
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -12,11 +14,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'testsecretkey'
 db = SQLAlchemy(app)
 app.app_context().push()
+shortened_urls = {}
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+def generate_short_url(lenght=6):
+    chars = string.ascii_letters + string.digits
+    short_url = "".join(random.choice(chars) for _ in range(lenght))
+    return short_url
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -76,8 +83,24 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    if request.method == "POST":
+        long_url = request.form['long_url']
+        short_url = generate_short_url()
+        while short_url in shortened_urls:
+            short_url = generate_short_url()
+
+        shortened_urls[short_url] = long_url
+        return f"Shortened URL: {request.url_root}{short_url}"
+    
     return render_template('dashboard.html')
 
+@app.route("/<short_url>")
+def redirect_url(short_url):
+    long_url = shortened_urls.get(short_url)
+    if long_url:
+        return redirect(long_url)
+    else:
+        return "URL not found", 404
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
