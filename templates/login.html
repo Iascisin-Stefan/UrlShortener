@@ -3,16 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}"> 
+    <!--<link href="./output.css" rel="stylesheet">-->
     <title>Login</title>
 </head>
-<body>
-    <h1>Login page</h1>
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.password }}
-        {{ form.submit }}
-    </form>
-    <a href="{{ url_for('register')}}">Register Page</a><br>
+
+<body class="bg-zinc-800">
+    <nav class="bg-zinc-900 ">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <div class="flex items-center space-x-3">
+                <h1 class="self-center text-xl font-semibold whitespace-nowrap text-white">URL Shortener</h1>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="px-4 my-28 max-w-3xl mx-auto space-y-6" >
+        <h1 class="text-center font-bold text-gray-200 px-5">Login page</h1>
+        <form method="POST" action="">
+            <div class="flex space-x-4">
+                {{ form.hidden_tag() }}
+                <div class="bg-zinc-700 border border-gray-400 block py-2 px-4 w-full rounded focus:outline-none focus:border-gray-200 ">{{ form.username }}</div>
+                <div class="bg-zinc-700 border border-gray-400 block py-2 px-4 w-full rounded focus:outline-none focus:border-gray-200 ">{{ form.password }}</div>    
+                <div class="text-gray-200 bg-purple-950 hover:bg-purple-700 font-bold py-2 px-4 rounded border border-gray-400 hover:border-gray-200">{{ form.submit }}</div>
+            </div>
+        </form>
+    </div>
+    
+    <a href="{{ url_for('register')}}" class="font-bold text-gray-200 px-5">Register Page</a><br>
+
 </body>
 </html>

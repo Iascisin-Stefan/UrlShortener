@@ -1,6 +1,6 @@
 import random
 import string
-from flask import Flask, render_template, url_for, redirect, request 
+from flask import Flask, render_template, url_for, redirect, request, session 
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -91,7 +91,7 @@ def dashboard():
 
         shortened_urls[short_url] = long_url
         return f"Shortened URL: {request.url_root}{short_url}"
-    
+
     return render_template('dashboard.html')
 
 @app.route("/<short_url>")
